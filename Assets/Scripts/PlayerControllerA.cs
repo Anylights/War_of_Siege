@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerControllerA : MonoBehaviour
 {
@@ -12,8 +13,7 @@ public class PlayerControllerA : MonoBehaviour
     private GameObject moveIndicator;
     private Vector2 indicatorPos;
     private Vector2 moveInput;
-    private Vector2 newIndicatorPos;
-    private int moveRange = 3;
+    private List<Vector2> path;
 
     private GameObject downWall;
     private GameObject upWall;
@@ -24,6 +24,12 @@ public class PlayerControllerA : MonoBehaviour
     public void SetState(string newState)
     {
         currentState = newState;
+
+        if (currentState == "Move")
+        {
+            // 初始化路径
+            path = new List<Vector2> { indicatorPos };
+        }
 
         if (currentState == "SetWall")
         {
@@ -78,10 +84,29 @@ public class PlayerControllerA : MonoBehaviour
             int newX = Mathf.RoundToInt(potentialNewIndicatorPos.x);
             int newZ = Mathf.RoundToInt(potentialNewIndicatorPos.y);
 
-            int distance = Mathf.RoundToInt(Mathf.Abs(potentialMoveInput.x) + Mathf.Abs(potentialMoveInput.y));
-
-            if (mapManager.IsValidTile(newX, newZ) && distance <= moveRange)
+            // Check if the position is valid and within the move range
+            if (mapManager.IsValidTile(newX, newZ) && potentialNewIndicatorPos != AnotherPlayer.GetPos())
             {
+                if (path.Contains(potentialNewIndicatorPos))
+                {
+                    // 如果新位置在路径中，将路径中该位置后的所有点删除
+                    int index = path.IndexOf(potentialNewIndicatorPos);
+                    path.RemoveRange(index + 1, path.Count - (index + 1));
+                }
+                else
+                {
+                    if (path.Count < 4)
+                    {
+                        // 如果路径长度小于4，将新位置加入路径
+                        path.Add(potentialNewIndicatorPos);
+                    }
+                    else
+                    {
+                        // 如果路径长度大于等于4，不能移动
+                        return;
+                    }
+                }
+
                 moveInput = potentialMoveInput;
                 moveIndicator.transform.position = mapManager.map[newX, newZ].transform.position;
             }
@@ -139,6 +164,10 @@ public class PlayerControllerA : MonoBehaviour
         int newZ = Mathf.RoundToInt(indicatorPos.y);
         transform.position = mapManager.map[newX, newZ].transform.position;
         moveInput = Vector2.zero;
+
+        // 清空路径
+        path.Clear();
+
         SetState("SetWall");
     }
 
@@ -171,5 +200,10 @@ public class PlayerControllerA : MonoBehaviour
         // 切换到下一状态（假设为Wait状态）
         SetState("Wait");
         AnotherPlayer.SetState("Move");
+    }
+
+    public Vector2 GetPos()
+    {
+        return indicatorPos;
     }
 }

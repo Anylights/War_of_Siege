@@ -16,7 +16,7 @@ public class MapManager : MonoBehaviour
 
     void Start()
     {
-        Distance_of_Wall_and_Floor = 1.0f;
+        Distance_of_Wall_and_Floor = 0.6f;
         if (map_all_inlst.Length < mapSizeX * mapSizeZ)
         {
             Debug.LogError("map_all_inlst 的长度不足以填充 map 数组。");
