@@ -1,9 +1,10 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class MapManager : MonoBehaviour
 {
     public GameObject[] map_all_inlst;
-    public GameObject[,] map;
+    private GameObject[,] map;
     public int mapSizeX;
     public int mapSizeZ;
     public float Distance_of_Wall_and_Floor;
@@ -14,7 +15,13 @@ public class MapManager : MonoBehaviour
     public int[,] WallRow;
     public int[,] WallColumn;
 
-    void Start()
+    public List<Vector2> AreaA;
+    public List<Vector2> AreaB;
+
+    public PlayerControllerA PlayerA;
+    public PlayerControllerB PlayerB;
+
+    void Awake()
     {
         Distance_of_Wall_and_Floor = 0.6f;
         if (map_all_inlst.Length < mapSizeX * mapSizeZ)
@@ -41,6 +48,30 @@ public class MapManager : MonoBehaviour
         //初始化墙壁
         WallRow = CreateRowWall(mapSizeX, mapSizeZ + 1);
         WallColumn = CreateColumnWall(mapSizeX + 1, mapSizeZ);
+    }
+
+    void Update()
+    {
+        AreaA = GetConnectedArea(PlayerA.GetPos());
+        AreaB = GetConnectedArea(PlayerB.GetPos());
+        bool isGameOver = true;
+        foreach (Vector2 pos in AreaB)
+        {
+            if (AreaA.Contains(pos))
+            {
+                isGameOver = false;
+                break;
+            }
+        }
+
+        if (isGameOver)
+        {
+            Debug.Log("Game Over!");
+            Debug.Log("AreaA: " + AreaA.Count);
+            // 打印AreaB内容
+            Debug.Log("AreaB: " + AreaB.Count);
+            // 实现游戏结束逻辑
+        }
     }
 
 
@@ -134,5 +165,53 @@ public class MapManager : MonoBehaviour
         Vector3 wallPostion = new Vector3((map[x, z].transform.position.x + map[x - 1, z].transform.position.x) / 2, 0, map[x, z].transform.position.z);
         GameObject wall = Instantiate(Wall_prehab, wallPostion, Quaternion.Euler(0, 90, 0));
         return wall;
+    }
+
+
+    public List<Vector2> GetConnectedArea(Vector2 startPos)
+    {
+        List<Vector2> connectedArea = new List<Vector2>();
+        Stack<Vector2> stack = new Stack<Vector2>();
+        HashSet<Vector2> visited = new HashSet<Vector2>();
+
+        stack.Push(startPos);
+        visited.Add(startPos);
+
+        while (stack.Count > 0)
+        {
+            Vector2 current = stack.Pop();
+            connectedArea.Add(current);
+
+            List<Vector2> neighbors = GetValidNeighbors(current);
+            foreach (Vector2 neighbor in neighbors)
+            {
+                if (!visited.Contains(neighbor))
+                {
+                    stack.Push(neighbor);
+                    visited.Add(neighbor);
+                }
+            }
+        }
+
+        return connectedArea;
+    }
+
+    private List<Vector2> GetValidNeighbors(Vector2 pos)
+    {
+        List<Vector2> neighbors = new List<Vector2>();
+        int x = Mathf.RoundToInt(pos.x);
+        int z = Mathf.RoundToInt(pos.y);
+
+        if (x > 0 && WallColumn[x, z] != 1) neighbors.Add(new Vector2(x - 1, z));
+        if (x < mapSizeX - 1 && WallColumn[x + 1, z] != 1) neighbors.Add(new Vector2(x + 1, z));
+        if (z > 0 && WallRow[x, z] != 1) neighbors.Add(new Vector2(x, z - 1));
+        if (z < mapSizeZ - 1 && WallRow[x, z + 1] != 1) neighbors.Add(new Vector2(x, z + 1));
+
+        return neighbors;
+    }
+
+    public GameObject[,] GetMap()
+    {
+        return map;
     }
 }

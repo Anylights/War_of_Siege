@@ -398,6 +398,10 @@ MonoBehaviour:
   mapSizeZ: 5
   Distance_of_Wall_and_Floor: 0
   Wall_prehab: {fileID: 4266645917720141889, guid: 1f60aa75558a7894d85b09c0d85719c6, type: 3}
+  AreaA: []
+  AreaB: []
+  PlayerA: {fileID: 1748322277}
+  PlayerB: {fileID: 552715803}
 --- !u!1 &253745996
 GameObject:
   m_ObjectHideFlags: 0
@@ -594,7 +598,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8833937145072679628, guid: 4388a98a710a6364c97f91bff33fff43, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.182
       objectReference: {fileID: 0}
     - target: {fileID: 8833937145072679628, guid: 4388a98a710a6364c97f91bff33fff43, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2032,7 +2036,6 @@ MonoBehaviour:
   mapManager: {fileID: 181326671}
   AnotherPlayer: {fileID: 552715803}
   moveIndicatorPrefab: {fileID: 1858930982402276060, guid: 9447766ce08ed214599e6943193d6725, type: 3}
-  pathIndicatorPrefab: {fileID: 3161131334609138992, guid: 8004bebd8ebbf8d4799f72ac691587ed, type: 3}
   startPosX: 0
   startPosZ: 0
 --- !u!1 &1791315609

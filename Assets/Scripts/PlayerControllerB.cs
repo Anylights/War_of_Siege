@@ -52,9 +52,11 @@ public class PlayerControllerB : MonoBehaviour
         SetState("Wait");
         moveInput = Vector2.zero;
         indicatorPos = new Vector2(startPosX, startPosZ);
-        transform.position = mapManager.map[startPosX, startPosZ].transform.position;
+        transform.position = mapManager.GetMap()[startPosX, startPosZ].transform.position;
         moveIndicator = Instantiate(moveIndicatorPrefab, transform.position, Quaternion.identity);
+
     }
+
 
     private void Update()
     {
@@ -69,13 +71,13 @@ public class PlayerControllerB : MonoBehaviour
             Vector2 tempMoveInput = Vector2.zero;
             Vector2 real_Indicator_Pos = indicatorPos + moveInput;
 
-            if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) && (mapManager.WallRow[Mathf.RoundToInt(real_Indicator_Pos.x), Mathf.RoundToInt(real_Indicator_Pos.y) + 1] != 1))
+            if ((Input.GetKeyDown(KeyCode.W)) && (mapManager.WallRow[Mathf.RoundToInt(real_Indicator_Pos.x), Mathf.RoundToInt(real_Indicator_Pos.y) + 1] != 1))
                 tempMoveInput.y = 1;
-            if ((Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) && (mapManager.WallRow[Mathf.RoundToInt(real_Indicator_Pos.x), Mathf.RoundToInt(real_Indicator_Pos.y)] != 1))
+            if ((Input.GetKeyDown(KeyCode.S)) && (mapManager.WallRow[Mathf.RoundToInt(real_Indicator_Pos.x), Mathf.RoundToInt(real_Indicator_Pos.y)] != 1))
                 tempMoveInput.y = -1;
-            if ((Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) && (mapManager.WallColumn[Mathf.RoundToInt(real_Indicator_Pos.x), Mathf.RoundToInt(real_Indicator_Pos.y)] != 1))
+            if ((Input.GetKeyDown(KeyCode.A)) && (mapManager.WallColumn[Mathf.RoundToInt(real_Indicator_Pos.x), Mathf.RoundToInt(real_Indicator_Pos.y)] != 1))
                 tempMoveInput.x = -1;
-            if ((Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) && (mapManager.WallColumn[Mathf.RoundToInt(real_Indicator_Pos.x) + 1, Mathf.RoundToInt(real_Indicator_Pos.y)] != 1))
+            if ((Input.GetKeyDown(KeyCode.D)) && (mapManager.WallColumn[Mathf.RoundToInt(real_Indicator_Pos.x) + 1, Mathf.RoundToInt(real_Indicator_Pos.y)] != 1))
                 tempMoveInput.x = 1;
 
             Vector2 potentialMoveInput = moveInput + tempMoveInput;
@@ -108,7 +110,7 @@ public class PlayerControllerB : MonoBehaviour
                 }
 
                 moveInput = potentialMoveInput;
-                moveIndicator.transform.position = mapManager.map[newX, newZ].transform.position;
+                moveIndicator.transform.position = mapManager.GetMap()[newX, newZ].transform.position;
             }
 
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.JoystickButton0))
@@ -162,7 +164,7 @@ public class PlayerControllerB : MonoBehaviour
         indicatorPos += moveInput;
         int newX = Mathf.RoundToInt(indicatorPos.x);
         int newZ = Mathf.RoundToInt(indicatorPos.y);
-        transform.position = mapManager.map[newX, newZ].transform.position;
+        transform.position = mapManager.GetMap()[newX, newZ].transform.position;
         moveInput = Vector2.zero;
 
         // 清空路径
