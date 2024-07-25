@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 public class MapManager : MonoBehaviour
@@ -11,7 +12,6 @@ public class MapManager : MonoBehaviour
 
     public GameObject Wall_prehab;
 
-
     public int[,] WallRow;
     public int[,] WallColumn;
 
@@ -20,6 +20,15 @@ public class MapManager : MonoBehaviour
 
     public PlayerControllerA PlayerA;
     public PlayerControllerB PlayerB;
+
+    public GameObject effectPrefab; // 特效预制体
+
+    public AudioSource audioSource;
+
+    public AudioClip BombClip;
+
+
+    private bool isAnimationPlayed = false;
 
     void Awake()
     {
@@ -45,9 +54,14 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        //初始化墙壁
+        // 初始化墙壁
         WallRow = CreateRowWall(mapSizeX, mapSizeZ + 1);
         WallColumn = CreateColumnWall(mapSizeX + 1, mapSizeZ);
+    }
+
+    void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -55,6 +69,7 @@ public class MapManager : MonoBehaviour
         AreaA = GetConnectedArea(PlayerA.GetPos());
         AreaB = GetConnectedArea(PlayerB.GetPos());
         bool isGameOver = true;
+
         foreach (Vector2 pos in AreaB)
         {
             if (AreaA.Contains(pos))
@@ -68,13 +83,56 @@ public class MapManager : MonoBehaviour
         {
             Debug.Log("Game Over!");
             Debug.Log("AreaA: " + AreaA.Count);
-            // 打印AreaB内容
             Debug.Log("AreaB: " + AreaB.Count);
-            // 实现游戏结束逻辑
+
+            if (AreaA.Count == AreaB.Count)
+            {
+                // 平局
+                Debug.Log("It's a tie!");
+            }
+            else
+            {
+                if (!isAnimationPlayed)
+                {
+                    List<Vector2> loser_area = AreaA.Count < AreaB.Count ? AreaA : AreaB;
+                    if (AreaA.Count < AreaB.Count)
+                    {
+                        PlayerA.Die();
+                    }
+                    else
+                    {
+                        PlayerB.Die();
+                    }
+                    StartCoroutine(HideTilesAndSpawnEffects(loser_area));
+                    isAnimationPlayed = true;
+                }
+            }
         }
     }
 
+    IEnumerator HideTilesAndSpawnEffects(List<Vector2> loserTiles)
+    {
+        foreach (Vector2 pos in loserTiles)
+        {
+            int x = Mathf.RoundToInt(pos.x);
+            int z = Mathf.RoundToInt(pos.y);
 
+            if (IsValidTile(x, z))
+            {
+                // 隐藏 Tile
+                map[x, z].SetActive(false);
+
+                // 在对应位置生成特效
+                Vector3 effectPosition = map[x, z].transform.position;
+                Instantiate(effectPrefab, effectPosition, Quaternion.identity);
+
+                audioSource.PlayOneShot(BombClip);
+
+                // 等待0.1秒
+                yield return new WaitForSeconds(0.1f);
+            }
+        }
+    }
 
     public bool IsValidTile(int x, int z)
     {
@@ -166,7 +224,6 @@ public class MapManager : MonoBehaviour
         GameObject wall = Instantiate(Wall_prehab, wallPostion, Quaternion.Euler(0, 90, 0));
         return wall;
     }
-
 
     public List<Vector2> GetConnectedArea(Vector2 startPos)
     {

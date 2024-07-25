@@ -2,24 +2,29 @@ using UnityEngine;
 
 public class Tile : MonoBehaviour
 {
-    private Renderer rend;
+    public Material newMaterial; // 要替换的新材质
+    private Material originalMaterial; // 保存原始材质
+    private Renderer objectRenderer; // 对象的渲染器
 
-    private void Start()
+    private void Awake()
     {
-        // 在当前GameObject或子对象中找到Renderer组件
-        rend = GetComponentInChildren<Renderer>();
 
-        if (rend == null)
-        {
-            Debug.LogError("Tile上没有找到Renderer组件！");
-        }
+        objectRenderer = GetComponent<Renderer>();
+        originalMaterial = objectRenderer.material; // 保存原始材质
     }
 
-    public void Highlight(bool highlight)
+    public void isInPath(bool isinpath)
     {
-        if (rend != null)
+        if (isinpath)
         {
-            rend.material.color = highlight ? Color.yellow : Color.white;
+            objectRenderer.material = newMaterial; // 更换材质
         }
+        else
+        {
+            objectRenderer.material = originalMaterial;
+        }
+
     }
+
+
 }
