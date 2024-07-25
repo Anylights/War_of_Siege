@@ -77,9 +77,9 @@ Material:
     - _GlossyReflections: 1
     - _Lumin: 0.18
     - _MaxAtten: 0
-    - _MaxLight: 1
+    - _MaxLight: 0.894
     - _Metallic: 0
-    - _MinLight: 0.476
+    - _MinLight: 0.449
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Offset: 1.1
@@ -104,12 +104,12 @@ Material:
     - _SpcTolerc: 0.05
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _Steps: 2.3
-    - _StpSmooth: 0.198
+    - _Steps: 3
+    - _StpSmooth: 0.193
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 0.30768958, g: 0.4056604, b: 0.36430326, a: 1}
+    - _Color: {r: 0.11764705, g: 0.35686275, b: 0.2673671, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _MaxColor: {r: 0, g: 0.8590385, b: 0.8962264, a: 1}
     - _MinColor: {r: 0.21976727, g: 0, b: 0.4056604, a: 1}

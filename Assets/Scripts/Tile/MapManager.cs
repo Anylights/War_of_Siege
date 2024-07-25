@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Video;
 
 public class MapManager : MonoBehaviour
 {
@@ -26,6 +27,12 @@ public class MapManager : MonoBehaviour
     public AudioSource audioSource;
 
     public AudioClip BombClip;
+
+    public EndMenuManager endMenuManager;
+
+    public VideoPlayer EndVideoPlayer;
+    public VideoClip Awin;    // 第一个视频片段
+    public VideoClip Bwin;    // 第二个视频片段
 
 
     private bool isAnimationPlayed = false;
@@ -85,27 +92,33 @@ public class MapManager : MonoBehaviour
             Debug.Log("AreaA: " + AreaA.Count);
             Debug.Log("AreaB: " + AreaB.Count);
 
-            if (AreaA.Count == AreaB.Count)
+
+            if (!isAnimationPlayed)
             {
-                // 平局
-                Debug.Log("It's a tie!");
-            }
-            else
-            {
-                if (!isAnimationPlayed)
+                if (AreaA.Count == AreaB.Count)
+                {
+                    // 平局
+                    Debug.Log("It's a tie!");
+                    endMenuManager.ShowTiePanel();
+                }
+                else
                 {
                     List<Vector2> loser_area = AreaA.Count < AreaB.Count ? AreaA : AreaB;
                     if (AreaA.Count < AreaB.Count)
                     {
                         PlayerA.Die();
+                        PlayVideo(Bwin);
+                        endMenuManager.ShowPlayerBWinPanel();
                     }
                     else
                     {
                         PlayerB.Die();
+                        PlayVideo(Awin);
+                        endMenuManager.ShowPlayerAWinPanel();
                     }
                     StartCoroutine(HideTilesAndSpawnEffects(loser_area));
-                    isAnimationPlayed = true;
                 }
+                isAnimationPlayed = true;
             }
         }
     }
@@ -270,5 +283,16 @@ public class MapManager : MonoBehaviour
     public GameObject[,] GetMap()
     {
         return map;
+    }
+
+    public int GetWinnerScore()
+    {
+        return AreaA.Count > AreaB.Count ? AreaA.Count : AreaB.Count;
+    }
+
+    public void PlayVideo(VideoClip clip)
+    {
+        EndVideoPlayer.clip = clip;
+        EndVideoPlayer.Play();
     }
 }
