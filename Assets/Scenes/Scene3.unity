@@ -3403,6 +3403,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndVideoPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 6886692268437067095, guid: 8d5ca523ba865d34781b75a8c700a24c, type: 3}
+      propertyPath: m_TargetCamera
+      value: 
+      objectReference: {fileID: 918736690}
     - target: {fileID: 7649300496737329898, guid: 8d5ca523ba865d34781b75a8c700a24c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2172.6208

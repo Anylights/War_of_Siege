@@ -1,8 +1,8 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Collections;
-
-
 
 public class Guides : MonoBehaviour
 {
@@ -12,7 +12,6 @@ public class Guides : MonoBehaviour
     public GameObject continueButton;
     public GameObject returnButton;
     public GameObject quitButton;
-
 
     private bool menuActive = false;
     private RectTransform menuRectTransform;
@@ -25,17 +24,14 @@ public class Guides : MonoBehaviour
 
         hiddenPosition = new Vector3(menuRectTransform.anchoredPosition.x, -menuHeight, 0f);
         shownPosition = new Vector3(menuRectTransform.anchoredPosition.x, menuHeight, 0f);
-
         menuRectTransform.anchoredPosition = hiddenPosition;
-
-
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ToggleMenu();
+            ToggleMenuVisibility();
         }
     }
 
@@ -45,20 +41,16 @@ public class Guides : MonoBehaviour
 
         if (menuActive)
         {
-
             StartCoroutine(MoveMenu(shownPosition));
         }
         else
         {
             StartCoroutine(MoveMenu(hiddenPosition));
-
-
         }
     }
 
     IEnumerator MoveMenu(Vector3 targetPosition)
     {
-
         Vector3 startPosition = menuRectTransform.anchoredPosition;
         float elapsedTime = 0f;
 
@@ -70,27 +62,35 @@ public class Guides : MonoBehaviour
         }
 
         menuRectTransform.anchoredPosition = targetPosition;
-
     }
 
     public void ContinueGame()
     {
         Time.timeScale = 1f;
         ToggleMenu();
+        ClearButtonFocus();
     }
 
     public void ReturnToScene01()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("Scene0");
+        ClearButtonFocus();
     }
 
     public void QuitGame()
     {
         Application.Quit();
     }
+
     public void ToggleMenuVisibility()
     {
         ToggleMenu();
+        ClearButtonFocus();
+    }
+
+    private void ClearButtonFocus()
+    {
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

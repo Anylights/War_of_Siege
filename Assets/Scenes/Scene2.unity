@@ -1728,6 +1728,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 937944201022941500, guid: 5a82f91785c73d94ba722f337732f48d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4016918444524303482, guid: 5a82f91785c73d94ba722f337732f48d, type: 3}
       propertyPath: m_Name
       value: NewUI
@@ -1771,6 +1775,10 @@ PrefabInstance:
     - target: {fileID: 4033137973931618186, guid: 5a82f91785c73d94ba722f337732f48d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4155100571435130397, guid: 5a82f91785c73d94ba722f337732f48d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6472932851233323992, guid: 5a82f91785c73d94ba722f337732f48d, type: 3}
       propertyPath: m_IsActive
@@ -1918,6 +1926,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EndVideoPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 6886692268437067095, guid: 8d5ca523ba865d34781b75a8c700a24c, type: 3}
+      propertyPath: m_TargetCamera
+      value: 
+      objectReference: {fileID: 255890322}
     - target: {fileID: 7649300496737329898, guid: 8d5ca523ba865d34781b75a8c700a24c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2172.6208
